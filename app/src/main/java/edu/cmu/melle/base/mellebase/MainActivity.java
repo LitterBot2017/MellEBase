@@ -1,6 +1,7 @@
 package edu.cmu.melle.base.mellebase;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,6 +16,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     double mRoll;
     double mPitch;
     int mNumSatellites;
+    int mMode;
 
     LocationManager mLocationManager;
     long mLastLocationMillis;
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     TextView mAzimuthText;
     TextView mNumSatellitesText;
     EditText mIpAddressText;
+    Button mGPSMode;
+    Button mObstacleMode;
+    Button mKeyboardMode;
     LowPassFilter filterYaw = new LowPassFilter(0.03f);
     LowPassFilter filterPitch = new LowPassFilter(0.03f);
     LowPassFilter filterRoll = new LowPassFilter(0.03f);
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "MyWakelockTag");
         wakeLock.acquire();
-
+        mMode=1;
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
 
         mLatitudeText = (TextView) findViewById(R.id.latitudeText);
@@ -85,6 +91,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mAzimuthText = (TextView) findViewById(R.id.azimuthText);
         mNumSatellitesText = (TextView) findViewById(R.id.numSatellitesText);
         mIpAddressText = (EditText) findViewById(R.id.ipAddressText);
+        mGPSMode = (Button) findViewById(R.id.gps);
+        mObstacleMode = (Button) findViewById(R.id.obstacle);
+        mKeyboardMode = (Button) findViewById(R.id.keyboard);
+
+        mGPSMode.setBackgroundColor(Color.argb(255, 0, 255, 0));
+        mKeyboardMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
+        mObstacleMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -117,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             json.put("roll", mRoll);
             json.put("pitch", mPitch);
             json.put("sats", mNumSatellites);
+            json.put("mode",mMode);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -222,6 +236,28 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mPortNumber="9090";
         mRosBridge = new ROSBridge(mIpAddress, mPortNumber);
         mRosBridge.start();
+
+        //mRosBridge.subscribeToTopic("/MellE_msg", "melle");
     }
 
+    public void gps(View view){
+        mMode=1;
+        mGPSMode.setBackgroundColor(Color.argb(255, 0, 255, 0));
+        mObstacleMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
+        mKeyboardMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
+    }
+
+    public void obstacle(View view){
+        mMode=2;
+        mGPSMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
+        mObstacleMode.setBackgroundColor(Color.argb(255, 0, 255, 0));
+        mKeyboardMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
+    }
+
+    public void keyboard(View view){
+        mMode=3;
+        mGPSMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
+        mObstacleMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
+        mKeyboardMode.setBackgroundColor(Color.argb(255, 0, 255, 0));
+    }
 }
