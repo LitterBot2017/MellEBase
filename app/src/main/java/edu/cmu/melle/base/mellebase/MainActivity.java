@@ -260,4 +260,5 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mObstacleMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
         mKeyboardMode.setBackgroundColor(Color.argb(255, 0, 255, 0));
     }
+    
 }
