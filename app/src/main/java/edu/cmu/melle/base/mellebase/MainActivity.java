@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     double mPitch;
     int mNumSatellites;
     int mMode;
+    int mCommand=0;
 
     LocationManager mLocationManager;
     long mLastLocationMillis;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     Button mGPSMode;
     Button mObstacleMode;
     Button mKeyboardMode;
+    ImageButton mUp;
     LowPassFilter filterYaw = new LowPassFilter(0.03f);
     LowPassFilter filterPitch = new LowPassFilter(0.03f);
     LowPassFilter filterRoll = new LowPassFilter(0.03f);
@@ -131,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             json.put("pitch", mPitch);
             json.put("sats", mNumSatellites);
             json.put("mode",mMode);
+            json.put("command",mCommand);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -259,6 +263,35 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mGPSMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
         mObstacleMode.setBackgroundColor(Color.argb(255, 255, 0, 0));
         mKeyboardMode.setBackgroundColor(Color.argb(255, 0, 255, 0));
+    }
+
+    public void up(View view){
+        mCommand=1;
+    }
+
+    public void down(View view){
+        mCommand=2;
+    }
+    public void left(View view){
+        mCommand=3;
+    }
+    public void right(View view){
+        mCommand=4;
+    }
+    public void strafeLeftUp(View view){
+        mCommand=5;
+    }
+    public void strafeLeftDown(View view){
+        mCommand=6;
+    }
+    public void strafeRightUp(View view){
+        mCommand=7;
+    }
+    public void strafeRightDown(View view){
+        mCommand=8;
+    }
+    public void stop(View view){
+        mCommand=0;
     }
 
 }
